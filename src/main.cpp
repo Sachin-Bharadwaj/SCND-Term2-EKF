@@ -7,8 +7,27 @@
 
 using namespace std;
 
+float PI = 3.142;
+
 // for convenience
 using json = nlohmann::json;
+
+
+// utility function
+/*
+void check_files(ifstream& in_file, string& in_name,
+                 ofstream& out_file, string& out_name) {
+  if (!in_file.is_open()) {
+    cerr << "Cannot open input file: " << in_name << endl;
+    exit(EXIT_FAILURE);
+  }
+
+  if (!out_file.is_open()) {
+    cerr << "Cannot open output file: " << out_name << endl;
+    exit(EXIT_FAILURE);
+  }
+}*/
+
 
 // Checks if the SocketIO event has JSON data.
 // If there is data the JSON object in string format will be returned,
@@ -37,6 +56,8 @@ int main()
   Tools tools;
   vector<VectorXd> estimations;
   vector<VectorXd> ground_truth;
+  
+  ofstream out_file_("outfile_name.txt", ofstream::out);
 
   h.onMessage([&fusionEKF,&tools,&estimations,&ground_truth](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
@@ -65,6 +86,7 @@ int main()
     	  // reads first element from the current line
     	  string sensor_type;
     	  iss >> sensor_type;
+          
 
     	  if (sensor_type.compare("L") == 0) {
       	  		meas_package.sensor_type_ = MeasurementPackage::LASER;
